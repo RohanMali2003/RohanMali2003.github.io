@@ -1,0 +1,1136 @@
+@use "./variables.scss" as *;
+
+// =============================================================================
+// NOTE: Google Fonts are loaded via quartz.config.yaml (theme.fontOrigin +
+// theme.typography). Space Grotesk & Inter are declared there.
+// DO NOT add @import url() here — it breaks the CSS output order.
+// =============================================================================
+
+// =============================================================================
+// PALETTE MAP — 5 topics × 2 modes (light + dark)
+//
+// Quartz injects `data-slug` on <body> for every page.
+// e.g. <body data-slug="engineering/dsa-notes">
+// We use that to apply per-topic CSS custom properties.
+//
+// Selector pattern: body[data-slug^="FOLDER"] targets all pages under /FOLDER/
+// =============================================================================
+
+// ─── DEFAULT / LOG / ROOT — Ink & Paper ─────────────────────────────────────
+// A warm, aged-paper aesthetic for the homepage and untagged pages.
+// Deliberate, calm — like a well-used sketchbook.
+:root {
+  --light: #f5f0e8;
+  --lightgray: #e2d8c4;
+  --gray: #a09070;
+  --darkgray: #1e1a14;
+  --dark: #0d0b08;
+  --secondary: #1e1a14;
+  --tertiary: #6b4226;
+  --highlight: rgba(107, 66, 38, 0.10);
+  --textHighlight: rgba(232, 213, 183, 0.55);
+
+  --accent-border: 3px solid var(--secondary);
+  --accent-shadow: 4px 4px 0 var(--secondary);
+  --accent-shadow-sm: 2px 2px 0 var(--secondary);
+  --accent-hover-shift: translateX(4px);
+}
+
+// Log folder — same warm paper palette
+body[data-slug^="log"] {
+  --light: #f5f0e8;
+  --lightgray: #e2d8c4;
+  --gray: #a09070;
+  --darkgray: #1e1a14;
+  --dark: #0d0b08;
+  --secondary: #1e1a14;
+  --tertiary: #6b4226;
+  --highlight: rgba(107, 66, 38, 0.10);
+  --textHighlight: rgba(232, 213, 183, 0.55);
+  --accent-shadow: 4px 4px 0 #1e1a14;
+  --accent-shadow-sm: 2px 2px 0 #1e1a14;
+}
+
+// ─── ENGINEERING — Blueprint ─────────────────────────────────────────────────
+// High-information density. Cool structured blues — precision of a schematic.
+// Evokes drafting tables, navy graph paper, circuit board traces.
+body[data-slug^="engineering"] {
+  --light: #f0f6ff;
+  --lightgray: #d0e4f8;
+  --gray: #7a9ec0;
+  --darkgray: #0d2137;
+  --dark: #061525;
+  --secondary: #0d2137;
+  --tertiary: #1a6eb5;
+  --highlight: rgba(74, 158, 255, 0.10);
+  --textHighlight: rgba(74, 158, 255, 0.25);
+  --accent-border: 3px solid #0d2137;
+  --accent-shadow: 4px 4px 0 #0d2137;
+  --accent-shadow-sm: 2px 2px 0 #0d2137;
+}
+
+// ─── PROJECTS — Monochrome Editorial ────────────────────────────────────────
+// Stark black-and-white with a single red accent jab.
+// Like a Swiss grid poster — zero decoration, maximum structure.
+body[data-slug^="projects"] {
+  --light: #fafafa;
+  --lightgray: #e8e8e8;
+  --gray: #999999;
+  --darkgray: #0f0f0f;
+  --dark: #000000;
+  --secondary: #0f0f0f;
+  --tertiary: #cc2200;
+  --highlight: rgba(204, 34, 0, 0.08);
+  --textHighlight: rgba(204, 34, 0, 0.20);
+  --accent-border: 3px solid #0f0f0f;
+  --accent-shadow: 4px 4px 0 #0f0f0f;
+  --accent-shadow-sm: 2px 2px 0 #0f0f0f;
+}
+
+// ─── CANVAS — Terra ──────────────────────────────────────────────────────────
+// Warm terracottas and ochres — the pigment and oil of the studio.
+// Feels like raw linen, cadmium yellow, burnt sienna. Expressive.
+body[data-slug^="canvas"] {
+  --light: #fdf3e4;
+  --lightgray: #f0dfc0;
+  --gray: #b08050;
+  --darkgray: #3d1a00;
+  --dark: #1a0a00;
+  --secondary: #8b3a00;
+  --tertiary: #c87020;
+  --highlight: rgba(200, 112, 32, 0.12);
+  --textHighlight: rgba(200, 112, 32, 0.28);
+  --accent-border: 3px solid #8b3a00;
+  --accent-shadow: 4px 4px 0 #8b3a00;
+  --accent-shadow-sm: 2px 2px 0 #8b3a00;
+}
+
+// ─── ORBIT — Cosmos ──────────────────────────────────────────────────────────
+// Deep space: dark indigos, violet constellations, 2am under the stars.
+// Expansive but contained — like a notebook written outside.
+body[data-slug^="orbit"] {
+  --light: #f8f5ff;
+  --lightgray: #e0d8f8;
+  --gray: #8870c0;
+  --darkgray: #1a0a3a;
+  --dark: #0a0520;
+  --secondary: #3d1f7a;
+  --tertiary: #7b5ea7;
+  --highlight: rgba(123, 94, 167, 0.10);
+  --textHighlight: rgba(123, 94, 167, 0.25);
+  --accent-border: 3px solid #3d1f7a;
+  --accent-shadow: 4px 4px 0 #3d1f7a;
+  --accent-shadow-sm: 2px 2px 0 #3d1f7a;
+}
+
+// =============================================================================
+// DARK MODE OVERRIDES (saved-theme="dark" class is applied to <html> by Quartz)
+// =============================================================================
+
+// Default / Log dark
+html[saved-theme="dark"] :root,
+html[saved-theme="dark"] body,
+html[saved-theme="dark"] body:not([data-slug^="engineering"]):not([data-slug^="projects"]):not([data-slug^="canvas"]):not([data-slug^="orbit"]) {
+  --light: #141210;
+  --lightgray: #2a2520;
+  --gray: #5a5040;
+  --darkgray: #d8c8a8;
+  --dark: #f0e8d8;
+  --secondary: #e8d5b7;
+  --tertiary: #c8935a;
+  --highlight: rgba(200, 147, 90, 0.12);
+  --textHighlight: rgba(200, 147, 90, 0.35);
+  --accent-shadow: 4px 4px 0 #e8d5b7;
+  --accent-shadow-sm: 2px 2px 0 #e8d5b7;
+}
+
+html[saved-theme="dark"] body[data-slug^="log"] {
+  --light: #141210;
+  --lightgray: #2a2520;
+  --gray: #5a5040;
+  --darkgray: #d8c8a8;
+  --dark: #f0e8d8;
+  --secondary: #e8d5b7;
+  --tertiary: #c8935a;
+  --highlight: rgba(200, 147, 90, 0.12);
+  --textHighlight: rgba(200, 147, 90, 0.35);
+  --accent-shadow: 4px 4px 0 #e8d5b7;
+  --accent-shadow-sm: 2px 2px 0 #e8d5b7;
+}
+
+html[saved-theme="dark"] body[data-slug^="engineering"] {
+  --light: #060f1a;
+  --lightgray: #0f2035;
+  --gray: #2a5070;
+  --darkgray: #a8d0f0;
+  --dark: #d8eeff;
+  --secondary: #4a9eff;
+  --tertiary: #1a6eb5;
+  --highlight: rgba(74, 158, 255, 0.12);
+  --textHighlight: rgba(74, 158, 255, 0.28);
+  --accent-shadow: 4px 4px 0 #4a9eff;
+  --accent-shadow-sm: 2px 2px 0 #4a9eff;
+}
+
+html[saved-theme="dark"] body[data-slug^="projects"] {
+  --light: #0a0a0a;
+  --lightgray: #1c1c1c;
+  --gray: #4a4a4a;
+  --darkgray: #f0f0f0;
+  --dark: #ffffff;
+  --secondary: #f0f0f0;
+  --tertiary: #ff4422;
+  --highlight: rgba(255, 68, 34, 0.10);
+  --textHighlight: rgba(255, 68, 34, 0.22);
+  --accent-shadow: 4px 4px 0 #f0f0f0;
+  --accent-shadow-sm: 2px 2px 0 #f0f0f0;
+}
+
+html[saved-theme="dark"] body[data-slug^="canvas"] {
+  --light: #150a00;
+  --lightgray: #2a1500;
+  --gray: #6a3f1a;
+  --darkgray: #f0c898;
+  --dark: #fff0d8;
+  --secondary: #e89040;
+  --tertiary: #c87020;
+  --highlight: rgba(232, 144, 64, 0.12);
+  --textHighlight: rgba(232, 144, 64, 0.28);
+  --accent-shadow: 4px 4px 0 #e89040;
+  --accent-shadow-sm: 2px 2px 0 #e89040;
+}
+
+html[saved-theme="dark"] body[data-slug^="orbit"] {
+  --light: #070310;
+  --lightgray: #110825;
+  --gray: #2a1a50;
+  --darkgray: #c8b8f0;
+  --dark: #e8d8ff;
+  --secondary: #9878d0;
+  --tertiary: #7b5ea7;
+  --highlight: rgba(152, 120, 208, 0.12);
+  --textHighlight: rgba(152, 120, 208, 0.28);
+  --accent-shadow: 4px 4px 0 #9878d0;
+  --accent-shadow-sm: 2px 2px 0 #9878d0;
+}
+
+// =============================================================================
+// GLOBAL RESET — Geometric Aesthetic Foundation
+// Sharp corners. Thick lines. No softness.
+// =============================================================================
+
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
+
+// Global transition for palette swaps (smooth, not jarring)
+body,
+.left.sidebar,
+.right.sidebar,
+.center,
+article {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+// =============================================================================
+// TYPOGRAPHY — Space Grotesk Headlines, Inter Body
+// (fonts are loaded by Quartz via quartz.config.yaml theme.typography)
+// =============================================================================
+
+h1, h2, h3, h4, h5, h6,
+.article-title,
+.page-title,
+.folder-title,
+.section-title {
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif !important;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+h1, .article-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+h2 {
+  font-size: clamp(1.3rem, 3vw, 1.75rem);
+  font-weight: 700;
+  border-bottom: 2px solid var(--secondary);
+  padding-bottom: 0.3rem;
+  margin-top: 2rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+body,
+p,
+li,
+td,
+th {
+  font-family: var(--bodyFont), "Inter", system-ui, sans-serif !important;
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--codeFont), "IBM Plex Mono", monospace !important;
+  font-size: 0.875em;
+}
+
+// =============================================================================
+// PAGE STRUCTURE — Geometric Blocks & Aligned Grid
+// =============================================================================
+
+#quartz-body {
+  & .sidebar {
+    padding-top: 3rem !important;
+  }
+  & .page-header {
+    margin-top: 3rem !important;
+  }
+}
+
+.left.sidebar {
+  border-right: 2px solid var(--lightgray);
+
+  .flex-component {
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+
+  .search {
+    margin: 0 !important;
+  }
+
+  .search-button,
+  button.darkmode,
+  button.readermode {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 36px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+}
+
+article {
+  max-width: 72ch;
+}
+
+// =============================================================================
+// EXPLORER (LEFT SIDEBAR NAV) — Bold, Picasso-Inspired Geometric Blocks
+// =============================================================================
+
+// 1. Strip Default Text Decorations across Explorer & Sidebar links
+.explorer,
+.left.sidebar,
+.right.sidebar {
+  a,
+  a.internal,
+  a.external,
+  button,
+  .nav-folder-title,
+  .nav-file-title,
+  .folder-title,
+  .folder-button {
+    text-decoration: none !important;
+    border-bottom: none !important;
+  }
+}
+
+.explorer {
+  width: 100%;
+  box-sizing: border-box;
+
+  // Header Title Button
+  button.title-button > h2,
+  h2 {
+    font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.18em !important;
+    color: var(--gray) !important;
+    margin: 0 0 0.5rem 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  // 2 & 3. Folder Container / Titles — Distinct, Geometric Clickable Blocks
+  .nav-folder-title,
+  .folder-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem !important;
+    margin: 0.35rem 0 !important;
+    font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.82rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: var(--secondary) !important;
+    background-color: var(--light) !important;
+    border: 2px solid var(--secondary) !important;
+    box-shadow: 2px 2px 0 var(--secondary);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+
+    button.folder-button {
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      color: inherit !important;
+      font-family: inherit !important;
+      font-weight: inherit !important;
+    }
+
+    // Stark Color-Block Hover State
+    &:hover {
+      background-color: var(--secondary) !important;
+      color: var(--light) !important;
+      box-shadow: 4px 4px 0 var(--tertiary) !important;
+      transform: translate(-1px, -1px);
+      text-decoration: none !important;
+
+      * {
+        color: var(--light) !important;
+        stroke: var(--light) !important;
+      }
+    }
+  }
+
+  // 2 & 3. File Links — Distinct, Geometric Clickable Blocks
+  .nav-file-title {
+    display: block;
+    padding: 0.45rem 0.75rem 0.45rem 1.4rem !important;
+    margin: 0.25rem 0 !important;
+    font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    color: var(--darkgray) !important;
+    border-left: 3px solid var(--lightgray) !important;
+    background-color: transparent;
+    text-decoration: none !important;
+    border-bottom: none !important;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.15s ease;
+
+    // Stark Color-Block Hover State
+    &:hover {
+      background-color: var(--secondary) !important;
+      color: var(--light) !important;
+      border-left-color: var(--tertiary) !important;
+      transform: translateX(4px);
+      text-decoration: none !important;
+    }
+
+    // Active State
+    &[aria-current="page"],
+    &.is-active {
+      color: var(--light) !important;
+      background-color: var(--secondary) !important;
+      border-left-color: var(--tertiary) !important;
+      font-weight: 700 !important;
+    }
+  }
+
+  ul.tree-item-children {
+    padding-left: 0.4rem !important;
+    margin: 0.2rem 0 !important;
+    border-left: 2px solid var(--lightgray);
+  }
+}
+
+.folder-icon,
+.fold {
+  stroke: var(--secondary) !important;
+  transition: stroke 0.15s ease, transform 0.2s ease;
+}
+
+// =============================================================================
+// GRAPH VIEW — Geometric Border Treatment
+// =============================================================================
+
+.graph {
+  h3 {
+    font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.18em !important;
+    color: var(--gray) !important;
+    border-bottom: none !important;
+    margin: 0 0 0.5rem !important;
+    padding: 0 !important;
+  }
+}
+
+.graph-outer {
+  border: 2px solid var(--secondary) !important;
+  box-shadow: var(--accent-shadow) !important;
+  background: var(--light) !important;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 6px 6px 0 var(--secondary) !important;
+  }
+}
+
+.global-graph-icon {
+  color: var(--secondary) !important;
+  border: 2px solid var(--secondary) !important;
+  padding: 0.25rem !important;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    box-shadow: var(--accent-shadow-sm);
+    transform: translate(-1px, -1px);
+  }
+}
+
+// =============================================================================
+// RECENT NOTES — Punchy Editorial Feed
+// Each note card is a stark, headline-driven block.
+// =============================================================================
+
+.recent-notes {
+  width: 100%;
+
+  > h3,
+  > .recent-notes-header {
+    font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.18em !important;
+    color: var(--gray) !important;
+    border-bottom: 2px solid var(--secondary);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem !important;
+    border-top: none !important;
+  }
+}
+
+ul.recent-ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+ul.recent-ul > li {
+  position: relative;
+  padding: 1rem 1rem 1rem 1.25rem !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--lightgray);
+  border-left: 4px solid transparent;
+  transition:
+    border-left-color 0.15s ease,
+    background-color 0.15s ease,
+    transform 0.15s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -4px;
+    width: 4px;
+    height: 0;
+    background-color: var(--tertiary);
+    transition: height 0.2s ease;
+  }
+
+  &:hover {
+    background-color: var(--highlight);
+    border-left-color: var(--secondary);
+    transform: translateX(2px);
+
+    &::before {
+      height: 100%;
+    }
+  }
+
+  > a,
+  > p > a,
+  h3 > a,
+  > div > a {
+    font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.05rem !important;
+    color: var(--secondary) !important;
+    text-decoration: none !important;
+    line-height: 1.3;
+    display: block;
+    margin-bottom: 0.2rem;
+
+    &:hover {
+      text-decoration: underline !important;
+      text-underline-offset: 3px;
+    }
+  }
+
+  > .meta,
+  > .content-meta,
+  > time,
+  > p.meta {
+    font-size: 0.72rem !important;
+    color: var(--gray) !important;
+    font-family: var(--codeFont), "IBM Plex Mono", monospace !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+
+  > p:last-child:not(.meta) {
+    font-size: 0.9rem;
+    color: var(--darkgray);
+    line-height: 1.6;
+    margin: 0.3rem 0 0;
+  }
+
+  ul.tags {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0.5rem 0 0 !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+
+    li a.tag-link {
+      display: inline-block;
+      font-size: 0.65rem !important;
+      font-family: var(--codeFont), "IBM Plex Mono", monospace !important;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.15rem 0.5rem;
+      border: 1.5px solid var(--secondary);
+      color: var(--secondary) !important;
+      background: transparent;
+      text-decoration: none !important;
+      transition: background-color 0.12s ease, color 0.12s ease;
+
+      &:hover {
+        background-color: var(--secondary);
+        color: var(--light) !important;
+      }
+    }
+  }
+}
+
+a.see-more {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  font-family: var(--headerFont), "Space Grotesk", sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--secondary) !important;
+  border-bottom: 2px solid var(--secondary);
+  text-decoration: none !important;
+  padding-bottom: 0.1rem;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    box-shadow: 2px 2px 0 var(--secondary);
+    transform: translate(-1px, -1px);
+  }
+}
+
+// =============================================================================
+// SEARCH BAR — Sharp, Controlled
+// =============================================================================
+
+.search-button {
+  border: 2px solid var(--lightgray) !important;
+  background: var(--light) !important;
+  padding: 0.3rem 0.6rem !important;
+  color: var(--darkgray) !important;
+  font-size: 0.85rem !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: var(--secondary) !important;
+    box-shadow: var(--accent-shadow-sm);
+  }
+}
+
+.search-bar {
+  border: 2px solid var(--secondary) !important;
+  background: var(--light) !important;
+  color: var(--darkgray) !important;
+  padding: 0.4rem 0.75rem !important;
+  box-shadow: var(--accent-shadow-sm);
+
+  &:focus {
+    outline: none !important;
+    box-shadow: var(--accent-shadow) !important;
+  }
+}
+
+.search-result-card {
+  border: 1px solid var(--lightgray) !important;
+  border-left: 3px solid transparent;
+  transition: border-left-color 0.12s ease, background-color 0.12s ease;
+
+  &:hover {
+    border-left-color: var(--secondary) !important;
+    background-color: var(--highlight) !important;
+  }
+}
+
+// =============================================================================
+// BREADCRUMBS — Minimal, Structural
+// =============================================================================
+
+.breadcrumb-container {
+  font-family: var(--codeFont), "IBM Plex Mono", monospace !important;
+  font-size: 0.72rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray) !important;
+  margin-bottom: 0.75rem;
+
+  a {
+    color: var(--gray) !important;
+    text-decoration: none !important;
+
+    &:hover {
+      color: var(--secondary) !important;
+      text-decoration: underline !important;
+    }
+  }
+
+  p {
+    color: var(--gray) !important;
+    margin: 0 0.3rem;
+  }
+}
+
+// =============================================================================
+// TABLE OF CONTENTS
+// =============================================================================
+
+.toc {
+  h3 {
+    font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.18em !important;
+    color: var(--gray) !important;
+    border-bottom: 2px solid var(--lightgray);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.75rem !important;
+    border-top: none !important;
+  }
+}
+
+.toc-content {
+  padding: 0 !important;
+
+  li a {
+    font-size: 0.82rem !important;
+    color: var(--darkgray) !important;
+    padding: 0.15rem 0.5rem;
+    border-left: 2px solid transparent;
+    display: block;
+    text-decoration: none;
+    transition: border-color 0.12s ease, color 0.12s ease;
+
+    &:hover {
+      border-left-color: var(--secondary);
+      color: var(--secondary) !important;
+    }
+  }
+
+  li.in-view > a {
+    border-left-color: var(--secondary);
+    color: var(--secondary) !important;
+    font-weight: 600;
+  }
+}
+
+// =============================================================================
+// BACKLINKS
+// =============================================================================
+
+.backlinks {
+  h3 {
+    font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.18em !important;
+    color: var(--gray) !important;
+    border-bottom: 2px solid var(--lightgray);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.75rem !important;
+    border-top: none !important;
+  }
+
+  ul li a {
+    font-size: 0.875rem;
+    color: var(--secondary) !important;
+    text-decoration: none;
+    display: block;
+    padding: 0.2rem 0.5rem;
+    border-left: 2px solid transparent;
+    transition: border-color 0.12s ease, background-color 0.12s ease;
+
+    &:hover {
+      border-left-color: var(--secondary);
+      background-color: var(--highlight);
+    }
+  }
+}
+
+// =============================================================================
+// ARTICLE CONTENT — Editorial Typography Polish
+// =============================================================================
+
+article {
+  blockquote {
+    border-left: 4px solid var(--secondary) !important;
+    margin: 1.5rem 0;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--highlight);
+
+    p {
+      font-family: var(--headerFont), "Space Grotesk", sans-serif;
+      font-weight: 500;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--darkgray);
+      margin: 0;
+    }
+  }
+
+  pre {
+    border: 2px solid var(--lightgray) !important;
+    border-left: 4px solid var(--secondary) !important;
+    padding: 1rem !important;
+    overflow-x: auto;
+  }
+
+  :not(pre) > code {
+    background-color: var(--lightgray);
+    color: var(--secondary);
+    padding: 0.1em 0.35em;
+    font-size: 0.875em;
+    border: 1px solid var(--gray);
+  }
+
+  a.internal,
+  a.external {
+    color: var(--secondary) !important;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: var(--tertiary);
+    transition: text-decoration-color 0.15s ease;
+
+    &:hover {
+      text-decoration-color: var(--secondary);
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 2px solid var(--secondary);
+    margin: 2rem 0;
+    opacity: 0.4;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5rem 0;
+  }
+
+  th {
+    background-color: var(--secondary) !important;
+    color: var(--light) !important;
+    font-family: var(--headerFont), "Space Grotesk", sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.8rem;
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+  }
+
+  td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--lightgray);
+  }
+
+  tr:hover td {
+    background-color: var(--highlight);
+  }
+}
+
+// =============================================================================
+// PAGE TITLE (SITE NAME)
+// =============================================================================
+
+.page-title,
+h2.page-title a {
+  font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  letter-spacing: -0.01em;
+  color: var(--secondary) !important;
+  text-decoration: none !important;
+  display: inline-block;
+  border-bottom: 3px solid var(--secondary);
+  padding-bottom: 2px;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 3px 0 var(--tertiary);
+  }
+}
+
+// =============================================================================
+// DARKMODE BUTTON
+// =============================================================================
+
+button.darkmode {
+  color: var(--secondary) !important;
+  background: transparent !important;
+  border: 2px solid var(--lightgray) !important;
+  padding: 0.25rem !important;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--secondary) !important;
+  }
+}
+
+// =============================================================================
+// FOOTER
+// =============================================================================
+
+footer {
+  border-top: 2px solid var(--lightgray);
+  padding-top: 1rem;
+
+  p, a {
+    color: var(--gray) !important;
+    font-size: 0.8rem;
+  }
+
+  a:hover {
+    color: var(--secondary) !important;
+  }
+}
+
+// =============================================================================
+// TAGS
+// =============================================================================
+
+a.tag-link,
+.tags > li > a {
+  font-family: var(--codeFont), "IBM Plex Mono", monospace !important;
+  font-size: 0.7rem !important;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.12rem 0.45rem !important;
+  border: 1.5px solid var(--secondary) !important;
+  color: var(--secondary) !important;
+  background: transparent !important;
+  text-decoration: none !important;
+  transition: background-color 0.12s ease, color 0.12s ease;
+
+  &:hover {
+    background-color: var(--secondary) !important;
+    color: var(--light) !important;
+  }
+}
+
+// =============================================================================
+// POPOVERS
+// =============================================================================
+
+.popover {
+  border: 2px solid var(--secondary) !important;
+  box-shadow: var(--accent-shadow) !important;
+  background: var(--light) !important;
+}
+
+// =============================================================================
+// CALLOUTS
+// =============================================================================
+
+.callout {
+  border-left: 4px solid var(--secondary) !important;
+
+  .callout-title {
+    font-family: var(--headerFont), "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+}
+
+// =============================================================================
+// CONTENT META (date, read time)
+// =============================================================================
+
+p.content-meta {
+  font-family: var(--codeFont), "IBM Plex Mono", monospace !important;
+  font-size: 0.75rem !important;
+  color: var(--gray) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.5rem !important;
+}
+
+// =============================================================================
+// ARTICLE TITLE — Dominant, Uncompromising
+// =============================================================================
+
+h1.article-title {
+  font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: clamp(1.8rem, 5vw, 2.8rem) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--secondary) !important;
+  margin-bottom: 0.25rem !important;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 4px;
+    background-color: var(--tertiary);
+    margin-top: 0.5rem;
+  }
+}
+
+// =============================================================================
+// MOBILE RESPONSIVENESS — Stark Geometric Overlay & Layout Stabilization
+// =============================================================================
+
+@media #{$mobile} {
+  body {
+    overflow-x: hidden !important;
+  }
+
+  #quartz-body {
+    grid-template-columns: 100% !important;
+    padding: 0 1rem !important;
+  }
+
+  .left.sidebar {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    padding: 1rem 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    border-right: none !important;
+    border-bottom: 2px solid var(--secondary) !important;
+
+    h2.page-title {
+      margin-bottom: 0.5rem !important;
+    }
+
+    .flex-component {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: wrap !important;
+      align-items: center !important;
+      gap: 0.5rem !important;
+      width: 100% !important;
+
+      .search {
+        flex: 1 1 auto !important;
+        min-width: 140px !important;
+      }
+    }
+
+    .explorer {
+      width: 100% !important;
+      margin-top: 0.5rem !important;
+
+      // Mobile Hamburger Toggle Button — Full width geometric block
+      button.mobile-explorer {
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        border: 2px solid var(--secondary) !important;
+        background-color: var(--light) !important;
+        color: var(--secondary) !important;
+        padding: 0.5rem 0.75rem !important;
+        font-family: var(--headerFont), "Space Grotesk", sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 0.82rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        box-shadow: 2px 2px 0 var(--secondary);
+
+        &:hover,
+        &[aria-expanded="true"] {
+          background-color: var(--secondary) !important;
+          color: var(--light) !important;
+          box-shadow: 3px 3px 0 var(--tertiary);
+
+          svg {
+            stroke: var(--light) !important;
+          }
+        }
+      }
+
+      // Mobile Collapsible Menu Dropdown Overlay
+      .explorer-content {
+        position: relative !important;
+        z-index: 100 !important;
+        border: 2px solid var(--secondary) !important;
+        box-shadow: 4px 4px 0 var(--secondary) !important;
+        background-color: var(--light) !important;
+        margin-top: 0.5rem;
+        padding: 0.75rem !important;
+        max-height: 60vh;
+        overflow-y: auto;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
+  }
+
+  h1.article-title {
+    font-size: clamp(1.5rem, 8vw, 2rem) !important;
+  }
+}
